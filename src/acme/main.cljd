@@ -9,10 +9,15 @@
     (m/MaterialApp
       .title "Hello Flutter"
       .theme (m/ThemeData .primarySwatch m.Colors/blue))
-    .home (m/Scaffold .appBar (m/AppBar
-                                .title (m/Text "Welcome to CLD!")))
+    .home (m/Scaffold
+            .backgroundColor m.Colors/indigo
+            .appBar
+            (m/AppBar .title (m/Text "Welcome to CLD!") .centerTitle true))
     .body
     m/Center
     (m/Text "Hello, Flutter"
+      .textDirection (.ltr m/TextDirection)
       .style (m/TextStyle
-               .color m.Colors/blue))))
+               .color m.Colors/white
+               .fontSize 34
+               .fontWeight m.FontWeight/bold))))
