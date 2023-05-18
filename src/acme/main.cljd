@@ -1,0 +1,18 @@
+(ns acme.main
+  (:require ["package:flutter/material.dart" :as m]
+            [ cljd.flutter :as f]
+            ;; [acme/stepic.practice :as practice]
+            ))
+
+(defn main []
+  (f/run
+    (m/MaterialApp
+      .title "Hello Flutter"
+      .theme (m/ThemeData .primarySwatch m.Colors/blue))
+    .home (m/Scaffold .appBar (m/AppBar
+                                .title (m/Text "Welcome to CLD!")))
+    .body
+    m/Center
+    (m/Text "Hello, Flutter"
+      .style (m/TextStyle
+               .color m.Colors/blue))))
