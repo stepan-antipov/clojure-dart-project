@@ -4,20 +4,68 @@
             ;; [acme/stepic.practice :as practice]
             ))
 
+
+(def MyFirstApp
+  (f/widget
+    :context ctx
+    (m/Scaffold
+      .appBar (m/AppBar
+                .title (m/Text "My App") .centerTitle true)
+      .backgroundColor m.Colors/indigo
+      .floatingActionButton
+      (m/FloatingActionButton
+        .onPressed nil
+        .child (m/Icon m.Icons/cloud_download))
+      .body
+     (m/Center .child
+       (m/Container
+         .padding (m.EdgeInsets/all 26)
+         .child
+         (m/Column
+           .mainAxisAlignment (m.MainAxisAlignment/center)
+           .children
+           [(m/Text "25 %"
+              .style (m/TextStyle .color m.Colors/white
+                       .fontSize 23))
+            (m/Text "Press button to download"
+              .style (m/TextStyle .color m.Colors/white
+                       .fontSize 23))
+            (m/LinearProgressIndicator .value 60)
+            ])))
+      )))
+
+
 (defn main []
   (f/run
-    (m/MaterialApp
-      .title "Hello Flutter"
-      .theme (m/ThemeData .primarySwatch m.Colors/blue))
-    .home (m/Scaffold
-            .backgroundColor m.Colors/indigo
-            .appBar
-            (m/AppBar .title (m/Text "Welcome to CLD!") .centerTitle true))
-    .body
-    m/Center
-    (m/Text "Hello, Flutter"
-      .textDirection (.ltr m/TextDirection)
-      .style (m/TextStyle
-               .color m.Colors/white
-               .fontSize 34
-               .fontWeight m.FontWeight/bold))))
+    (m/MaterialApp .title "My App" .home MyFirstApp)
+    ))
+
+
+
+
+
+
+
+
+
+
+
+
+;; .textAlign (.center m/TextAlign)
+
+
+;; (m/MaterialApp
+;;      .title "Hello Flutter"
+;;      .theme (m/ThemeData .primarySwatch m.Colors/blue))
+;;    .home (m/Scaffold
+;;            .backgroundColor m.Colors/indigo
+;;            .appBar
+;;            (m/AppBar .title (m/Text "Welcome to CLD!") .centerTitle true))
+;;    .body
+;;    m/Center
+;;    (m/Text "Hello, Flutter"
+;;      .textDirection (.ltr m/TextDirection)
+;;      .style (m/TextStyle
+;;               .color m.Colors/white
+;;               .fontSize 34
+;;               .fontWeight m.FontWeight/bold))
