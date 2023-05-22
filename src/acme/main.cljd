@@ -51,14 +51,27 @@
 
 (defn main []
   (f/run
-    (m/MaterialApp .title "My App" .home
+    (m/MaterialApp
+      .title "My App"
+      .theme (m/ThemeData .fontFamily "IndieFlower")
+      .home
       (m/Scaffold
-        .appBar (m/AppBar .title (m/Text "Adding Assets"))
+        .appBar (m/AppBar .centerTitle true .title (m/Text "Adding Assets"))
         .body (m/Center
                 .child (m/Stack
                          .children
                          [(m/Image .image (m/AssetImage "assets/images/back.jpg"))
-                          (m/Image.asset "assets/icons/flutter.png")]))))
+                          (m/Image.asset "assets/icons/flutter.png")
+                          (m/Positioned
+                            .top 16
+                            .left 125
+                            .child (m/Text "My custom font"
+                                     .style (m/TextStyle
+                                              .color m.Colors/white
+                                              .fontSize 23
+                                              ;; .fontFamily "IndieFlower"
+                                              )))]
+                         ))))
     ))
 
 
