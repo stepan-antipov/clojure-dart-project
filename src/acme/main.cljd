@@ -1,7 +1,6 @@
 (ns acme.main
   (:require ["package:flutter/material.dart" :as m]
             [ cljd.flutter :as f]
-
             ;; [acme/stepic.practice :as practice]
             ))
 
@@ -49,38 +48,30 @@
 ;;       )))
 
 
-(defn main []
-  (f/run
-    (m/MaterialApp
-      .title "My App"
-      .theme (m/ThemeData .fontFamily "IndieFlower")
-      .home
-      (m/Scaffold
-        .appBar (m/AppBar .centerTitle true .title (m/Text "Adding Assets"))
-        .body (m/Center
-                .child (m/Stack
-                         .children
-                         [(m/Image .image (m/AssetImage "assets/images/back.jpg"))
-                          (m/Image.asset "assets/icons/flutter.png")
-                          (m/Positioned
-                            .top 16
-                            .left 125
-                            .child (m/Text "My custom font"
-                                     .style (m/TextStyle
-                                              .color m.Colors/white
-                                              .fontSize 23
-                                              ;; .fontFamily "IndieFlower"
-                                              )))]
-                         ))))
-    ))
-
-
-
-
-
-
-
-
+;; (defn main []
+;;   (f/run
+;;     (m/MaterialApp
+;;       .title "My App"
+;;       .theme (m/ThemeData .fontFamily "IndieFlower")
+;;       .home
+;;       (m/Scaffold
+;;         .appBar (m/AppBar .centerTitle true .title (m/Text "Adding Assets"))
+;;         .body (m/Center
+;;                 .child (m/Stack
+;;                          .children
+;;                          [(m/Image .image (m/AssetImage "assets/images/back.jpg"))
+;;                           (m/Image.asset "assets/icons/flutter.png")
+;;                           (m/Positioned
+;;                             .top 16
+;;                             .left 125
+;;                             .child (m/Text "My custom font"
+;;                                      .style (m/TextStyle
+;;                                               .color m.Colors/white
+;;                                               .fontSize 23
+;;                                               ;; .fontFamily "IndieFlower"
+;;                                               )))]
+;;                          ))))
+;;     ))
 
 
 
@@ -103,3 +94,42 @@
 ;;               .color m.Colors/white
 ;;               .fontSize 34
 ;;               .fontWeight m.FontWeight/bold))
+
+
+
+
+
+(defonce counter-state (atom {:count 0}))
+
+(def MyCounter
+  (f/widget
+    :watch [state counter-state]
+    (m/Scaffold
+      .appBar (m/AppBar .title (m/Text "My counter"))
+      .body (m/Center
+              .child
+              (m/Column
+                .mainAxisAlignment (m.MainAxisAlignment/center)
+                .children
+                [(m/Text
+                   (str "Counter "
+                     (get @counter-state :count)))
+                 (m/IconButton
+                   .icon (m/Icon m.Icons/emoji_emotions_outlined )
+                   .onPressed (fn []
+                                (swap! counter-state update :count inc)))
+                 (m/IconButton
+                   .icon (m/Icon m.Icons/emoji_emotions )
+                   .onPressed (fn []
+                                (swap! counter-state update :count dec)))])) )
+    )
+  )
+
+
+(defn main []
+  (f/run
+
+    (m/MaterialApp
+      .title "Counter"
+      .home MyCounter
+      )))
