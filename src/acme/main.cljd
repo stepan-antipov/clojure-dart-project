@@ -143,29 +143,38 @@
   (f/widget
     (m/Scaffold
       .appBar (m/AppBar .title (m/Text "My App") .centerTitle true)
-      .body (m/Row
-              .children [(m/Expanded
-                           .flex 2
-                           .child
-                           (m.Image/network "https://static.rustore.ru/apk/73871807/content/SCREENSHOT/93ebf1a6-fd8b-4f9f-bdce-c380ca714b2c.jpeg" ))
-                         (m/Expanded
-                           .flex 2
-                           .child (m/Container
-                                    .padding (m.EdgeInsets/all 30)
-                                    .color (m.Colors/green)
-                                    .child (m/Text "1")))
-                         (m/Expanded
-                           .flex 2
-                           .child (m/Container
-                                    .padding (m.EdgeInsets/all 30)
-                                    .color (m.Colors/red)
-                                    .child (m/Text "2")))
-                         (m/Expanded
-                           .child (m/Container
-                             .padding (m.EdgeInsets/all 30)
-                             .color (m.Colors/blue)
-                             .child (m/Text "3")))])
-      ;; (m/Container
+      .body (m/Stack
+              .alignment (m.Alignment/center)
+              .children [(m/Icon (m.Icons/airplay) .size 200)
+                         (m/Positioned
+                           .top 50
+                           .left 35
+                           .child (m/Text
+                                    "TV"
+                                    .style (m/TextStyle
+                                             .fontSize 20)))])
+      ;; (m ;; (m/Row
+            ;;   .children [(m/Expanded
+            ;;                .flex 2
+            ;;                .child
+            ;;                (m.Image/network "https://static.rustore.ru/apk/73871807/content/SCREENSHOT/93ebf1a6-fd8b-4f9f-bdce-c380ca714b2c.jpeg" ))
+            ;;              (m/Expanded
+            ;;                .flex 2
+            ;;                .child (m/Container
+            ;;                         .padding (m.EdgeInsets/all 30)
+            ;;                         .color (m.Colors/green)
+            ;;                         .child (m/Text "1")))
+            ;;              (m/Expanded
+            ;;                .flex 2
+            ;;                .child (m/Container
+            ;;                         .padding (m.EdgeInsets/all 30)
+            ;;                         .color (m.Colors/red)
+            ;;                         .child (m/Text "2")))
+            ;;              (m/Expanded
+            ;;                .child (m/Container
+            ;;                  .padding (m.EdgeInsets/all 30)
+            ;;                  .color (m.Colors/blue)
+            ;;                  .child (m/Text "3")))])/Container
             ;;   .decoration (m/BoxDecoration
             ;;                 .color (m.Colors/yellow))
             ;;   .child ;; (m/Row
