@@ -10,7 +10,6 @@
 
 ;; ;; (defn updateProgress []
 ;; ;;   (let [oneSec (m/Duration .seconds 1)]
-
 ;; ;;     ))
 
 
@@ -99,37 +98,130 @@
 
 
 
-(defonce counter-state (atom {:count 0}))
+;; (defonce counter-state (atom {:count 0}))
 
-(def MyCounter
+
+
+
+;; (def MyCounter
+;;   (f/widget
+;;     :watch [state counter-state]
+;;     (m/Scaffold
+;;       .appBar (m/AppBar .title (m/Text "My counter"))
+;;       .body (m/Center
+;;               .child
+;;               (m/Column
+;;                 .mainAxisAlignment (m.MainAxisAlignment/center)
+;;                 .children
+;;                 [(m/Text
+;;                    (str "Counter "
+;;                      (get @counter-state :count)))
+;;                  (m/IconButton
+;;                    .icon (m/Icon m.Icons/emoji_emotions_outlined )
+;;                    .onPressed (fn []
+;;                                 (swap! counter-state update :count inc)))
+;;                  (m/IconButton
+;;                    .icon (m/Icon m.Icons/emoji_emotions )
+;;                    .onPressed (fn []
+;;                                 (swap! counter-state update :count dec)))])) )
+;;     )
+;;   )
+
+
+;; (defn main []
+;;   (f/run
+
+;;     (m/MaterialApp
+;;       .title "Counter"
+;;       .home MyCounter
+;;       )))
+
+
+
+
+(def MyWidget
   (f/widget
-    :watch [state counter-state]
     (m/Scaffold
-      .appBar (m/AppBar .title (m/Text "My counter"))
-      .body (m/Center
-              .child
-              (m/Column
-                .mainAxisAlignment (m.MainAxisAlignment/center)
-                .children
-                [(m/Text
-                   (str "Counter "
-                     (get @counter-state :count)))
-                 (m/IconButton
-                   .icon (m/Icon m.Icons/emoji_emotions_outlined )
-                   .onPressed (fn []
-                                (swap! counter-state update :count inc)))
-                 (m/IconButton
-                   .icon (m/Icon m.Icons/emoji_emotions )
-                   .onPressed (fn []
-                                (swap! counter-state update :count dec)))])) )
-    )
-  )
+      .appBar (m/AppBar .title (m/Text "My App") .centerTitle true)
+      .body (m/Row
+              .children [(m/Expanded
+                           .flex 2
+                           .child
+                           (m.Image/network "https://static.rustore.ru/apk/73871807/content/SCREENSHOT/93ebf1a6-fd8b-4f9f-bdce-c380ca714b2c.jpeg" ))
+                         (m/Expanded
+                           .flex 2
+                           .child (m/Container
+                                    .padding (m.EdgeInsets/all 30)
+                                    .color (m.Colors/green)
+                                    .child (m/Text "1")))
+                         (m/Expanded
+                           .flex 2
+                           .child (m/Container
+                                    .padding (m.EdgeInsets/all 30)
+                                    .color (m.Colors/red)
+                                    .child (m/Text "2")))
+                         (m/Expanded
+                           .child (m/Container
+                             .padding (m.EdgeInsets/all 30)
+                             .color (m.Colors/blue)
+                             .child (m/Text "3")))])
+      ;; (m/Container
+            ;;   .decoration (m/BoxDecoration
+            ;;                 .color (m.Colors/yellow))
+            ;;   .child ;; (m/Row
+            ;;          ;;   .children [(m/Icon (m.Icons/adjust)
+            ;;          ;;                .size 50
+            ;;          ;;                .color (m.Colors/green))
+            ;;          ;;              (m/Icon (m.Icons/adjust)
+            ;;          ;;                .size 50
+            ;;          ;;                .color (m.Colors/pink))
+            ;;          ;;              (m/Icon (m.Icons/adjust)
+            ;;          ;;                .size 50
+            ;;          ;;                .color (m.Colors/blue))
+            ;;          ;;              ])
+            ;;   (m/Column
+            ;;     .crossAxisAlignment (m.CrossAxisAlignment/end)
+            ;;     .mainAxisAlignment (m.MainAxisAlignment/spaceEvenly)
+            ;;     .children [(m/Icon (m.Icons/adjust)
+            ;;                  .size 50
+            ;;                  .color (m.Colors/green))
+            ;;                (m/Icon (m.Icons/adjust)
+            ;;                  .size 200
+            ;;                  .color (m.Colors/pink))
+            ;;                (m/Icon (m.Icons/adjust)
+            ;;                  .size 50
+            ;;                  .color (m.Colors/blue))
+            ;;                ]))
+
+      ;; (m/Container
+      ;;   .child (m/Text "Hi Flutter".style (m/TextStyle .fontSize 23))
+      ;;   .decoration (m/BoxDecoration
+      ;;                 .color (m.Colors/amber)
+      ;;                 .border (m.Border/all))
+      ;;   .width 200
+      ;;   .height 100
+      ;;   .padding (m.EdgeInsets/all 30)
+      ;;   .margin (m.EdgeInsets/all 50)
+      ;;   .alignment (m/Alignment 0 0))
+
+      ;; (m/Align
+      ;;   .child
+      ;;   .alignment (m/Alignment 0 -1))
+
+
+
+      ;; (m/Padding
+            ;;   .child
+            ;;   .padding (
+            ;;             ;; m.EdgeInsets/all 16
+            ;;             ;; m.EdgeInsets/only .left 15 .top 80
+
+            ;;             ))
+      )))
 
 
 (defn main []
   (f/run
-
     (m/MaterialApp
-      .title "Counter"
-      .home MyCounter
-      )))
+      .title "Building Layouts"
+      .home MyWidget)))
