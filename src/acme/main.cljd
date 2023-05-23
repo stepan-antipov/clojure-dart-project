@@ -142,17 +142,37 @@
 (def MyWidget
   (f/widget
     (m/Scaffold
-      .appBar (m/AppBar .title (m/Text "My App") .centerTitle true)
-      .body (m/Stack
-              .alignment (m.Alignment/center)
-              .children [(m/Icon (m.Icons/airplay) .size 200)
-                         (m/Positioned
-                           .top 50
-                           .left 35
-                           .child (m/Text
-                                    "TV"
-                                    .style (m/TextStyle
-                                             .fontSize 20)))])
+      .appBar (m/AppBar
+                .title (m/Text
+                         "Weather"
+                         .style (m/TextStyle
+                                  .color (m.Colors/black87)))
+                .centerTitle true
+                .iconTheme (m/IconThemeData .color (m.Colors/black87))
+                .leading (m/IconButton
+                           .icon (m/Icon m.Icons/menu)
+                           .onPressed (fn [] ()))
+                .backgroundColor (m.Colors/white)
+                .brightness (m.Brightness/light)
+                .actions [(m/IconButton
+                            .icon (m/Icon m.Icons/settings)
+                            .onPressed (fn []))]
+                )
+      .body nil
+
+
+
+
+      ;; (m/Stack
+            ;;   .alignment (m.Alignment/center)
+            ;;   .children [(m/Icon (m.Icons/airplay) .size 200)
+            ;;              (m/Positioned
+            ;;                .top 50
+            ;;                .left 35
+            ;;                .child (m/Text
+            ;;                         "TV"
+            ;;                         .style (m/TextStyle
+            ;;                                  .fontSize 20)))])
       ;; (m ;; (m/Row
             ;;   .children [(m/Expanded
             ;;                .flex 2
