@@ -137,115 +137,304 @@
 ;;       )))
 
 
+;; (def BuildBody
+;;   (f/widget
+;;     (m/SingleChildScrollView
+;;       .child
+;;       (m/Column
+;;         .children
+;;         [HeaderImage
+;;          (m/SafeArea
+;;            .child
+;;            (m/Padding
+;;              .padding (m.EdgeInsets/all 16)
+;;              .child
+;;              (m/Column
+;;                .crossAxisAlignment (m.CrossAxisAlignment/center)
+;;                .children [WeatherDescription
+;;                           (m/Divider)
+;;                           Temperature
+;;                           (m/Divider)
+;;                           TemperatureForecast
+;;                           (m/Divider)
+;;                           FooterRatings
+;;                           ])))]))
+;;     ))
+
+
+;; (def HeaderImage
+;;   (m/Image
+;;     .image (m/NetworkImage "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Cumulus_humilis_clouds_in_Ukraine.jpg/800px-Cumulus_humilis_clouds_in_Ukraine.jpg?20190924155252")
+;;     .fit (m.BoxFit/cover)
+;;     ))
+
+
+;; (def WeatherDescription
+;;   (m/Column
+;;     .crossAxisAlignment (m.CrossAxisAlignment/center)
+;;     .children [(m/Text
+;;                  "Tuesday - May 22"
+;;                  .style (m/TextStyle
+;;                           .fontSize 32
+;;                           .fontWeight (m.FontWeight/bold)))
+;;                (m/Divider)
+;;                (m/Text
+;;                  "This sample shows how to display a Divider between an orange and blue box inside a column. The Divider is 20 logical pixels in height and contains."
+;;                  .style (m/TextStyle
+;;                           .color (m.Colors/black54)))
+;;                ]))
+
+;; (def Temperature
+;;   (m/Row
+;;     .mainAxisAlignment (m.MainAxisAlignment/center)
+;;     .children
+;;     [(m/Column
+;;        .children
+;;        [(m/Icon (m.Icons/wb_sunny)
+;;           .color m.Colors/yellow)])
+;;      (m/SizedBox .width 16)
+;;      (m/Column
+;;        .crossAxisAlignment (m.CrossAxisAlignment/start)
+;;        .children
+;;        [(m/Row
+;;           .children
+;;           [(m/Text
+;;              "15 градусов, Ясно"
+;;              .style (m/TextStyle
+;;                       .color m.Colors/deepPurple
+;;                       ))
+;;            ])
+;;         (m/Row
+;;           .children
+;;           [(m/Text
+;;              "Чувашская Республика, Чебоксары")])])]))
+
+;; (def arr [20 21 22 23 24 25 26 27])
+
+;; (def TemperatureForecast
+;;   (m/Wrap
+;;     .spacing 10.0
+;;     .children
+;;     (map (fn [elem]
+;;            (m/Chip
+;;              .label (m/Text (str elem))
+;;              .avatar (m/Icon
+;;                        m.Icons/wb_cloudy
+;;                        .color m.Colors/blue)
+;;              .shape (m/RoundedRectangleBorder
+;;                       .borderRadius (m.BorderRadius/circular 4)
+;;                       .side (m/BorderSide
+;;                               .color (m.Colors/grey)))
+;;              .backgroundColor (m.Colors/white)))
+;;       arr)))
+
+
+;; (def FooterRatings
+;;   (let [stars
+;;         (m/Row
+;;           .children
+;;           [(m/Icon
+;;              (m.Icons/star)
+;;              .size 24
+;;              .color (m/Colors.blue.shade300))
+;;            (m/Icon
+;;              (m.Icons/star)
+;;              .size 24
+;;              .color (m.Colors/orange))
+;;            (m/Icon
+;;              (m.Icons/star)
+;;              .size 24
+;;              .color (m.Colors/orange))
+;;            (m/Icon
+;;              (m.Icons/star)
+;;              .size 24
+;;              .color (m.Colors/black))
+;;            (m/Icon
+;;              (m.Icons/star)
+;;              .size 24
+;;              .color (m.Colors/black))])]
+;;     (m/Row
+;;       .mainAxisAlignment (m.MainAxisAlignment/center)
+;;       .children
+;;       [(m/Text
+;;          "Info with openweathermap.org"
+;;          .style (m/TextStyle .fontSize 15))
+;;        (m/SizedBox .width 10)
+;;        stars
+;;        ])))
+
+
+;; (map-indexed
+;;       (fn [idx]
+;;         (m/Chip
+;;           .label (m/Text "1 градус")))
+;;       [1 2 3 4 5 6 7 8])
+
+
+;; (def MyWidget
+;;   (f/widget
+;;     (m/Scaffold
+;;       .appBar (m/AppBar
+;;                 .title (m/Text
+;;                          "Weather"
+;;                          .style (m/TextStyle
+;;                                   .color (m.Colors/black87)))
+;;                 .centerTitle true
+;;                 .iconTheme (m/IconThemeData .color (m.Colors/black87))
+;;                 .leading (m/IconButton
+;;                            .icon (m/Icon m.Icons/menu)
+;;                            .onPressed (fn []))
+;;                 .backgroundColor (m.Colors/white)
+;;                 .brightness (m.Brightness/light)
+;;                 .actions [(m/IconButton
+;;                             .icon (m/Icon m.Icons/settings)
+;;                             .onPressed (fn []))]
+;;                 )
+;;       .body BuildBody
+
+
+;;       ;; (m/Stack
+;;       ;;   .alignment (m.Alignment/center)
+;;       ;;   .children [(m/Icon (m.Icons/airplay) .size 200)
+;;       ;;              (m/Positioned
+;;       ;;                .top 50
+;;       ;;                .left 35
+;;       ;;                .child (m/Text
+;;       ;;                         "TV"
+;;       ;;                         .style (m/TextStyle
+;;       ;;                                  .fontSize 20)))])
+;;       ;; (m ;; (m/Row
+;;       ;;   .children [(m/Expanded
+;;       ;;                .flex 2
+;;       ;;                .child
+;;       ;;                (m.Image/network "https://static.rustore.ru/apk/73871807/content/SCREENSHOT/93ebf1a6-fd8b-4f9f-bdce-c380ca714b2c.jpeg" ))
+;;       ;;              (m/Expanded
+;;       ;;                .flex 2
+;;       ;;                .child (m/Container
+;;       ;;                         .padding (m.EdgeInsets/all 30)
+;;       ;;                         .color (m.Colors/green)
+;;       ;;                         .child (m/Text "1")))
+;;       ;;              (m/Expanded
+;;       ;;                .flex 2
+;;       ;;                .child (m/Container
+;;       ;;                         .padding (m.EdgeInsets/all 30)
+;;       ;;                         .color (m.Colors/red)
+;;       ;;                         .child (m/Text "2")))
+;;       ;;              (m/Expanded
+;;       ;;                .child (m/Container
+;;       ;;                  .padding (m.EdgeInsets/all 30)
+;;       ;;                  .color (m.Colors/blue)
+;;       ;;                  .child (m/Text "3")))])/Container
+;;       ;;   .decoration (m/BoxDecoration
+;;       ;;                 .color (m.Colors/yellow))
+;;       ;;   .child ;; (m/Row
+;;       ;;          ;;   .children [(m/Icon (m.Icons/adjust)
+;;       ;;          ;;                .size 50
+;;       ;;          ;;                .color (m.Colors/green))
+;;       ;;          ;;              (m/Icon (m.Icons/adjust)
+;;       ;;          ;;                .size 50
+;;       ;;          ;;                .color (m.Colors/pink))
+;;       ;;          ;;              (m/Icon (m.Icons/adjust)
+;;       ;;          ;;                .size 50
+;;       ;;          ;;                .color (m.Colors/blue))
+;;       ;;          ;;              ])
+;;       ;;   (m/Column
+;;       ;;     .crossAxisAlignment (m.CrossAxisAlignment/end)
+;;       ;;     .mainAxisAlignment (m.MainAxisAlignment/spaceEvenly)
+;;       ;;     .children [(m/Icon (m.Icons/adjust)
+;;       ;;                  .size 50
+;;       ;;                  .color (m.Colors/green))
+;;       ;;                (m/Icon (m.Icons/adjust)
+;;       ;;                  .size 200
+;;       ;;                  .color (m.Colors/pink))
+;;       ;;                (m/Icon (m.Icons/adjust)
+;;       ;;                  .size 50
+;;       ;;                  .color (m.Colors/blue))
+;;       ;;                ]))
+
+;;       ;; (m/Container
+;;       ;;   .child (m/Text "Hi Flutter".style (m/TextStyle .fontSize 23))
+;;       ;;   .decoration (m/BoxDecoration
+;;       ;;                 .color (m.Colors/amber)
+;;       ;;                 .border (m.Border/all))
+;;       ;;   .width 200
+;;       ;;   .height 100
+;;       ;;   .padding (m.EdgeInsets/all 30)
+;;       ;;   .margin (m.EdgeInsets/all 50)
+;;       ;;   .alignment (m/Alignment 0 0))
+
+;;       ;; (m/Align
+;;       ;;   .child
+;;       ;;   .alignment (m/Alignment 0 -1))
+
+
+
+;;       ;; (m/Padding
+;;       ;;   .child
+;;       ;;   .padding (
+;;       ;;             ;; m.EdgeInsets/all 16
+;;       ;;             ;; m.EdgeInsets/only .left 15 .top 80
+
+;;       ;;             ))
+;;       )))
+
+
+(def thousandElem (into []
+                    (map (fn [elem]
+                           (str "item " elem))
+                      (range 1000))))
 
 
 (def MyWidget
-  (f/widget
-    (m/Scaffold
-      .appBar (m/AppBar
-                .title (m/Text
-                         "Weather"
-                         .style (m/TextStyle
-                                  .color (m.Colors/black87)))
-                .centerTitle true
-                .iconTheme (m/IconThemeData .color (m.Colors/black87))
-                .leading (m/IconButton
-                           .icon (m/Icon m.Icons/menu)
-                           .onPressed (fn [] ()))
-                .backgroundColor (m.Colors/white)
-                .brightness (m.Brightness/light)
-                .actions [(m/IconButton
-                            .icon (m/Icon m.Icons/settings)
-                            .onPressed (fn []))]
-                )
-      .body nil
-
-
-
-
-      ;; (m/Stack
-            ;;   .alignment (m.Alignment/center)
-            ;;   .children [(m/Icon (m.Icons/airplay) .size 200)
-            ;;              (m/Positioned
-            ;;                .top 50
-            ;;                .left 35
-            ;;                .child (m/Text
-            ;;                         "TV"
-            ;;                         .style (m/TextStyle
-            ;;                                  .fontSize 20)))])
-      ;; (m ;; (m/Row
-            ;;   .children [(m/Expanded
-            ;;                .flex 2
-            ;;                .child
-            ;;                (m.Image/network "https://static.rustore.ru/apk/73871807/content/SCREENSHOT/93ebf1a6-fd8b-4f9f-bdce-c380ca714b2c.jpeg" ))
-            ;;              (m/Expanded
-            ;;                .flex 2
-            ;;                .child (m/Container
-            ;;                         .padding (m.EdgeInsets/all 30)
-            ;;                         .color (m.Colors/green)
-            ;;                         .child (m/Text "1")))
-            ;;              (m/Expanded
-            ;;                .flex 2
-            ;;                .child (m/Container
-            ;;                         .padding (m.EdgeInsets/all 30)
-            ;;                         .color (m.Colors/red)
-            ;;                         .child (m/Text "2")))
-            ;;              (m/Expanded
-            ;;                .child (m/Container
-            ;;                  .padding (m.EdgeInsets/all 30)
-            ;;                  .color (m.Colors/blue)
-            ;;                  .child (m/Text "3")))])/Container
-            ;;   .decoration (m/BoxDecoration
-            ;;                 .color (m.Colors/yellow))
-            ;;   .child ;; (m/Row
-            ;;          ;;   .children [(m/Icon (m.Icons/adjust)
-            ;;          ;;                .size 50
-            ;;          ;;                .color (m.Colors/green))
-            ;;          ;;              (m/Icon (m.Icons/adjust)
-            ;;          ;;                .size 50
-            ;;          ;;                .color (m.Colors/pink))
-            ;;          ;;              (m/Icon (m.Icons/adjust)
-            ;;          ;;                .size 50
-            ;;          ;;                .color (m.Colors/blue))
-            ;;          ;;              ])
-            ;;   (m/Column
-            ;;     .crossAxisAlignment (m.CrossAxisAlignment/end)
-            ;;     .mainAxisAlignment (m.MainAxisAlignment/spaceEvenly)
-            ;;     .children [(m/Icon (m.Icons/adjust)
-            ;;                  .size 50
-            ;;                  .color (m.Colors/green))
-            ;;                (m/Icon (m.Icons/adjust)
-            ;;                  .size 200
-            ;;                  .color (m.Colors/pink))
-            ;;                (m/Icon (m.Icons/adjust)
-            ;;                  .size 50
-            ;;                  .color (m.Colors/blue))
-            ;;                ]))
-
-      ;; (m/Container
-      ;;   .child (m/Text "Hi Flutter".style (m/TextStyle .fontSize 23))
-      ;;   .decoration (m/BoxDecoration
-      ;;                 .color (m.Colors/amber)
-      ;;                 .border (m.Border/all))
-      ;;   .width 200
-      ;;   .height 100
-      ;;   .padding (m.EdgeInsets/all 30)
-      ;;   .margin (m.EdgeInsets/all 50)
-      ;;   .alignment (m/Alignment 0 0))
-
-      ;; (m/Align
-      ;;   .child
-      ;;   .alignment (m/Alignment 0 -1))
-
-
-
-      ;; (m/Padding
-            ;;   .child
-            ;;   .padding (
-            ;;             ;; m.EdgeInsets/all 16
-            ;;             ;; m.EdgeInsets/only .left 15 .top 80
-
-            ;;             ))
+  (m/Scaffold
+    .appBar
+    (m/AppBar
+      .centerTitle true
+      .title (m/Text
+               "Adding Assets"))
+    .body
+    (f/widget
+      (m/ListView.builder
+        .itemCount (count thousandElem)
+        .itemBuilder (fn [_ idx]
+                       (m/Card
+                         .child (m/ListTile
+                                  .title (m/Text (thousandElem idx))
+                                  .leading (m/Icon
+                                             (m/Icons.insert_photo)
+                                             .color (m/Colors.red))
+                                  .trailing (m/Icon
+                                              (m/Icons.keyboard_arrow_right))))))
+      ;; (m/ListView
+      ;;   .padding (m/EdgeInsets.all 8)
+      ;;   ;; .scrollDirection (m/Axis.horizontal)
+      ;;   ;; .itemExtent 300
+      ;;   ;; .reverse true
+      ;;   .children [(m/ListTile
+      ;;                .title (m/Text "Sun")
+      ;;                .subtitle (m/Text "Today is Clear")
+      ;;                .leading (m/Icon
+      ;;                           m/Icons.wb_sunny
+      ;;                           .color (m/Colors.yellow))
+      ;;                .trailing (m/Icon
+      ;;                            m/Icons.keyboard_arrow_right))
+      ;;              (m/ListTile
+      ;;                .title (m/Text "Cloudy")
+      ;;                .subtitle (m/Text "Today is Clear")
+      ;;                .leading (m/Icon
+      ;;                           m/Icons.wb_cloudy
+      ;;                           .color (m/Colors.blue.shade300))
+      ;;                .trailing (m/Icon
+      ;;                            m/Icons.keyboard_arrow_right))
+      ;;              (m/ListTile
+      ;;                .title (m/Text "Snow")
+      ;;                .subtitle (m/Text "Today is Clear")
+      ;;                .leading (m/Icon
+      ;;                           m/Icons.ac_unit
+      ;;                           .color (m/Colors.blue))
+      ;;                .trailing (m/Icon
+      ;;                            m/Icons.keyboard_arrow_right))
+      ;;              ])
       )))
 
 
