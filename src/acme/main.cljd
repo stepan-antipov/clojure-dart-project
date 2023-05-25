@@ -379,11 +379,31 @@
 ;;       )))
 
 
-(def thousandElem (into []
-                    (map (fn [elem]
-                           (str "item " elem))
-                      (range 1000))))
+(def thousandElem
+  (into []
+    (map (fn [elem]
+            ;; (str "item " elem)
+           (if (= (rem elem 6) 0)
+             (m/Text
+               (str "Heading " elem)
+               .style (m/TextStyle .fontSize 24 .color (m/Colors.red))
+               )
+             (m/ListTile
+               .title (m/Text (str "Item " elem))
+               .leading (m/Icon
+                          (m/Icons.insert_photo)
+                          .color (m/Colors.red))
+               .trailing (m/Icon
+                           (m/Icons.keyboard_arrow_right))))
+           )
+      (range 1000))))
 
+;; (def HeadingItems
+;; (m/ListItem (str "Heading " elem))
+
+;; (def MessageItem
+;; (
+;;
 
 (def MyWidget
   (m/Scaffold
@@ -398,13 +418,7 @@
         .itemCount (count thousandElem)
         .itemBuilder (fn [_ idx]
                        (m/Card
-                         .child (m/ListTile
-                                  .title (m/Text (thousandElem idx))
-                                  .leading (m/Icon
-                                             (m/Icons.insert_photo)
-                                             .color (m/Colors.red))
-                                  .trailing (m/Icon
-                                              (m/Icons.keyboard_arrow_right))))))
+                         .child (thousandElem idx))))
       ;; (m/ListView
       ;;   .padding (m/EdgeInsets.all 8)
       ;;   ;; .scrollDirection (m/Axis.horizontal)
