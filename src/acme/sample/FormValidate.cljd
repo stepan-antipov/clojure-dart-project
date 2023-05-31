@@ -12,12 +12,16 @@
      (m/Column .crossAxisAlignment m/CrossAxisAlignment.start)
      .children
      [(m/TextFormField
-       .validator (fn [value] (when (str/blank? value) "Please enter some text")))
+       .validator
+       (fn [value]
+         (when (str/blank? value) "Please enter some text")))
       (m/Padding .padding (m/EdgeInsets.symmetric .vertical 16.0))
       (m/ElevatedButton
-       .onPressed #(when (.validate (.-currentState form-key))
-                     (.showSnackBar scaffold-messenger (m/SnackBar .content (m/Text "Processing Data")))
-                     nil)
+       .onPressed
+       #(when (.validate (.-currentState form-key))
+          (.showSnackBar scaffold-messenger
+            (m/SnackBar .content (m/Text "Processing Data")))
+          nil)
        .child (m/Text "Submit"))])))
 
 (defn main []

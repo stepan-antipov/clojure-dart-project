@@ -3,6 +3,7 @@
             [ cljd.flutter :as f]
             [acme.stepic.RegisterFormPage :refer
              [RegisterFormPage]]
+
            ;; [acme.stepic.Navigation :refer [Navigation]]
             ;; [acme.stepic.NamedRoutes :as NamedRoutes]
             ;; [acme.stepic.MyWheatherApp :refer [MyWheatherApp]]
@@ -696,7 +697,8 @@
     (m/MaterialApp
       .theme(m/ThemeData
              ; .fontFamily "IndieFlower"
-              .visualDensity m/VisualDensity.adaptivePlatformDensity)
+              .visualDensity
+              m/VisualDensity.adaptivePlatformDensity)
       .title "Register Form Demo"
       .home (RegisterFormPage)
       ;; .routes {"/page2" (PageTwo)}

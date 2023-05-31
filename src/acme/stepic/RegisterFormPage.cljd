@@ -1,84 +1,198 @@
 (ns acme.stepic.RegisterFormPage
-    (:require
-     ["package:flutter/material.dart" :as m]
-     [ cljd.flutter :as f]))
+  (:require
+   ["package:flutter/material.dart" :as m]
+   [ cljd.flutter :as f]))
 
 
+(defonce *formState* (atom {:isPasswordObscure true
+                          :isConfirmPasswordObscure true}))
 
 
 
 (defn RegisterFormPage []
-  (m/Scaffold
-    .appBar
-    (m/AppBar
-      .title (m/Text "RegisterFormPage")
-      .centerTitle true)
-    .body
-  (m/Form
-    .child
-    (m/ListView
-      .padding (m/EdgeInsets.all 16)
-      .children
-      [
-       (m/TextField
-         .decoration
-         (m/InputDecoration
-           .labelText "Full Name *"))
-       (m/SizedBox .height 10)
+  (f/widget
+    :managed [textController (m/TextEditingController)]
 
-       (m/TextFormField
-         .decoration
-       (m/InputDecoration
-         .labelText "Phone Number *"))
-       (m/SizedBox .height 10)
+    ;; :bg-watcher
+    ;;     ([^m/TextEditingValue
+    ;;       {second-input-text .-text} text-controller ]
+    ;;      (dart:core/print
+    ;;        (str "Second text field: " second-input-text)))
 
-       (m/TextFormField
-         .decoration
-       (m/InputDecoration
-         .labelText "Email Addres *"))
-       (m/SizedBox .height 20)
+    :watch [state *formState*]
+    (m/Scaffold
+      .appBar
+      (m/AppBar
+        .title (m/Text "RegisterFormPage")
+        .centerTitle true)
+      .body
+      (m/Form
+        .child
+        (m/ListView
+          .padding (m/EdgeInsets.all 16)
+          .children
+          [
+           (m/TextField
+                                        ;.inputFormatters
+                                        ;[m/FilteringTextInputFormatter.digitsOnly]
+             .controller textController
+             .decoration
+             (m/InputDecoration
+               .hintText "What is your name?"
+               .labelText "Full Name *"
+               .prefixIcon (m/Icon m/Icons.person)
+               .suffixIcon (m/Icon m/Icons.delete_outline
+                             .color (m/Colors.red))
+               .enabledBorder
+               (m/OutlineInputBorder
+                 .borderSide (m/BorderSide
+                               .color (m/Colors.black)
+                               .width 2.0)
+                 .borderRadius
+                 (m/BorderRadius.all
+                   (m/Radius.circular 20)))
 
-       (m/TextFormField
-         .decoration
-       (m/InputDecoration
-         .labelText "Life Story *"))
-       (m/SizedBox .height 10)
+               .focusedBorder
+               (m/OutlineInputBorder
+                 .borderSide (m/BorderSide
+                               .color (m/Colors.blue)
+                               .width 2.0)
+                 .borderRadius
+                 (m/BorderRadius.all
+                   (m/Radius.circular 20)))))
+           (m/SizedBox .height 10)
 
-       (m/TextFormField
-         .decoration
-       (m/InputDecoration
-         .labelText "Password *"))
-       (m/SizedBox .height 10)
+           (m/TextFormField
+             .keyboardType (m/TextInputType.phone)
+             ;; не получилось запретить писать буквы
+             .decoration
+             (m/InputDecoration
+               .labelText "Phone Number *"
+               .hintText "Input your phone number"
+               .helperText "Phone format: +7(900)000-00-00"
+               .prefixIcon (m/Icon (m/Icons.call))
+               .suffixIcon (m/Icon m/Icons.delete_outline
+                             .color (m/Colors.red))
+               .enabledBorder
+               (m/OutlineInputBorder
+                 .borderSide (m/BorderSide
+                               .color (m/Colors.black)
+                               .width 2.0)
+                 .borderRadius
+                 (m/BorderRadius.all
+                   (m/Radius.circular 20)))
 
-       (m/TextFormField
-         .decoration
-         (m/InputDecoration
-           .labelText "Confirm Password *"))
-       (m/SizedBox .height 10)
+               .focusedBorder
+               (m/OutlineInputBorder
+                 .borderSide (m/BorderSide
+                               .color (m/Colors.blue)
+                               .width 2.0)
+                 .borderRadius
+                 (m/BorderRadius.all
+                   (m/Radius.circular 20)))))
+           (m/SizedBox .height 10)
 
-       (m/ElevatedButton
-         .style (m/ElevatedButton.styleFrom
-                  .primary (m/Color 0xFF2AAE49))
-         .onPressed (fn [])
-         .child (m/Text "lol")
-         )
-       ;; (m/TextFormField
-       ;;   .decoration
-       ;;   (m/InputDecoration
-       ;;     .labelText "Email Addres *"))
-       ;; (m/SizedBox .height 10)
+           (m/TextFormField
+             .keyboardType (m/TextInputType.emailAddress)
+             .decoration
+             (m/InputDecoration
+               .labelText "Email Addres *"
+               .hintText "Input your email addres"
+               .icon (m/Icon (m/Icons.mail))
+               ))
+           (m/SizedBox .height 20)
 
-       ;; (m/TextFormField
-       ;;   .decoration
-       ;;   (m/InputDecoration
-       ;;     .labelText "Email Addres *"))
-       ;; (m/SizedBox .height 10)
+           (m/TextFormField
+             .maxLines 3
+             .decoration
+             (m/InputDecoration
+               .labelText "Life Story *"
+               .hintText "Tell us about yourself"
+               .helperText "Keep it short, this is just a demo"
+               .border (m/OutlineInputBorder)))
+           (m/SizedBox .height 10)
+
+           (m/TextFormField
+             .maxLength 8
+             ;; ПАРОЛЬ
+             .obscureText (:isPasswordObscure @*formState*)
+             .decoration
+             (m/InputDecoration
+               .labelText "Password *"
+               .hintText "Enter the password"
+               .icon (m/Icon (m/Icons.security))
+               .suffixIcon
+               (m/IconButton
+                 .icon (m/Icon (m/Icons.visibility))
+                 .onPressed
+                 (fn []
+                   (swap! *formState* update :isPasswordObscure not)))
+               ))
+           (m/SizedBox .height 10)
+
+           (m/TextFormField
+             ;; ПОДТВЕРДИТЬ ПАРОЛЬ
+             .maxLength 8
+             .obscureText (:isConfirmPasswordObscure @*formState*)
+             .decoration
+             (m/InputDecoration
+               .hintText "Confirm the password"
+               .icon (m/Icon (m/Icons.border_color))
+               .suffixIcon
+               (m/IconButton
+                 .icon (m/Icon (m/Icons.visibility))
+                 .onPressed
+                 (fn []
+                   (swap! *formState* update :isConfirmPasswordObscure not)))
+               .labelText "Confirm Password *"))
+           (m/SizedBox .height 10)
+
+           (m/ElevatedButton
+             .style (m/ElevatedButton.styleFrom
+                      .primary (m/Color 0xFF2AAE49))
+             .onPressed
+             (fn []
+                ;(dart:core/print (str "First text field: " text))
+               )
+
+             ;;(swap! counter-state update :count dec)
+             .child (m/Text "Submit")
+             )
+           ;; (m/TextFormField
+           ;;   .decoration
+           ;;   (m/InputDecoration
+           ;;     .labelText "Email Addres *"))
+           ;; (m/SizedBox .height 10)
+
+           ;; (m/TextFormField
+           ;;   .decoration
+           ;;   (m/InputDecoration
+           ;;     .labelText "Email Addres *"))
+           ;; (m/SizedBox .height 10)
 
 
-       ;; (m/TextFormField
-       ;;   .decoration
-       ;;   (m/InputDecoration
-       ;;     .labelText "Email Addres *"))
-       ;; (m/SizedBox .height 10)
-       ]
-      ))))
+           ;; (m/TextFormField
+           ;;   .decoration
+           ;;   (m/InputDecoration
+           ;;     .labelText "Email Addres *"))
+           ;; (m/SizedBox .height 10)
+           ]
+          )))))
+
+
+
+
+
+        ;; :managed [text-controller (m/TextEditingController)]
+
+        ;; :bg-watcher
+        ;; ([^m/TextEditingValue
+        ;;   {second-input-text .-text} text-controller ]
+        ;;  (dart:core/print
+        ;;    (str "Second text field: " second-input-text)))
+
+        ;; m/Column
+        ;; .children
+        ;; [(m/TextField .onChanged
+        ;;    (fn [text] (dart:core/print (str "First text field: " text))))
+        ;;  (m/TextField .controller text-controller)]))))
