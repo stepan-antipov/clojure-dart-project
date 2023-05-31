@@ -1,6 +1,12 @@
 (ns acme.main
   (:require ["package:flutter/material.dart" :as m]
             [ cljd.flutter :as f]
+            [acme.stepic.RegisterFormPage :refer
+             [RegisterFormPage]]
+           ;; [acme.stepic.Navigation :refer [Navigation]]
+            ;; [acme.stepic.NamedRoutes :as NamedRoutes]
+            ;; [acme.stepic.MyWheatherApp :refer [MyWheatherApp]]
+            ;; [acme.sample.VideoPlayer :refer [VideoPlayer]]
             ;; [acme/stepic.practice :as practice]
             ))
 
@@ -379,81 +385,319 @@
 ;;       )))
 
 
-(def thousandElem
-  (into []
-    (map (fn [elem]
-            ;; (str "item " elem)
-           (if (= (rem elem 6) 0)
-             (m/Text
-               (str "Heading " elem)
-               .style (m/TextStyle .fontSize 24 .color (m/Colors.red))
-               )
-             (m/ListTile
-               .title (m/Text (str "Item " elem))
-               .leading (m/Icon
-                          (m/Icons.insert_photo)
-                          .color (m/Colors.red))
-               .trailing (m/Icon
-                           (m/Icons.keyboard_arrow_right))))
-           )
-      (range 1000))))
+;; (def thousandElem
+;;   (into []
+;;     (map (fn [elem]
+;;             ;; (str "item " elem)
+;;            (if (= (rem elem 6) 0)
+;;              (m/Text
+;;                (str "Heading " elem)
+;;                .style (m/TextStyle .fontSize 24 .color (m/Colors.red))
+;;                )
+;;              (m/ListTile
+;;                .title (m/Text (str "Item " elem))
+;;                .leading (m/Icon
+;;                           (m/Icons.insert_photo)
+;;                           .color (m/Colors.red))
+;;                .trailing (m/Icon
+;;                            (m/Icons.keyboard_arrow_right))))
+;;            )
+;;       (range 1000))))
 
 ;; (def HeadingItems
 ;; (m/ListItem (str "Heading " elem))
 
 ;; (def MessageItem
 ;; (
-;;
+;; ;;
 
-(def MyWidget
-  (m/Scaffold
-    .appBar
-    (m/AppBar
-      .centerTitle true
-      .title (m/Text
-               "Adding Assets"))
-    .body
-    (f/widget
-      (m/ListView.builder
-        .itemCount (count thousandElem)
-        .itemBuilder (fn [_ idx]
-                       (m/Card
-                         .child (thousandElem idx))))
-      ;; (m/ListView
-      ;;   .padding (m/EdgeInsets.all 8)
-      ;;   ;; .scrollDirection (m/Axis.horizontal)
-      ;;   ;; .itemExtent 300
-      ;;   ;; .reverse true
-      ;;   .children [(m/ListTile
-      ;;                .title (m/Text "Sun")
-      ;;                .subtitle (m/Text "Today is Clear")
-      ;;                .leading (m/Icon
-      ;;                           m/Icons.wb_sunny
-      ;;                           .color (m/Colors.yellow))
-      ;;                .trailing (m/Icon
-      ;;                            m/Icons.keyboard_arrow_right))
-      ;;              (m/ListTile
-      ;;                .title (m/Text "Cloudy")
-      ;;                .subtitle (m/Text "Today is Clear")
-      ;;                .leading (m/Icon
-      ;;                           m/Icons.wb_cloudy
-      ;;                           .color (m/Colors.blue.shade300))
-      ;;                .trailing (m/Icon
-      ;;                            m/Icons.keyboard_arrow_right))
-      ;;              (m/ListTile
-      ;;                .title (m/Text "Snow")
-      ;;                .subtitle (m/Text "Today is Clear")
-      ;;                .leading (m/Icon
-      ;;                           m/Icons.ac_unit
-      ;;                           .color (m/Colors.blue))
-      ;;                .trailing (m/Icon
-      ;;                            m/Icons.keyboard_arrow_right))
-      ;;              ])
-      )))
+;; (def MyWidget
+;;   (m/Scaffold
+;;     .appBar
+;;     (m/AppBar
+;;       .centerTitle true
+;;       .title (m/Text
+;;                "Adding Assets"))
+;;     .body
+;;     (f/widget
+;;       (m/ListView.builder
+;;         .itemCount (count thousandElem)
+;;         .itemBuilder (fn [_ idx]
+;;                        (m/Card
+;;                          .child (thousandElem idx))))
+;;       ;; (m/ListView
+;;       ;;   .padding (m/EdgeInsets.all 8)
+;;       ;;   ;; .scrollDirection (m/Axis.horizontal)
+;;       ;;   ;; .itemExtent 300
+;;       ;;   ;; .reverse true
+;;       ;;   .children [(m/ListTile
+;;       ;;                .title (m/Text "Sun")
+;;       ;;                .subtitle (m/Text "Today is Clear")
+;;       ;;                .leading (m/Icon
+;;       ;;                           m/Icons.wb_sunny
+;;       ;;                           .color (m/Colors.yellow))
+;;       ;;                .trailing (m/Icon
+;;       ;;                            m/Icons.keyboard_arrow_right))
+;;       ;;              (m/ListTile
+;;       ;;                .title (m/Text "Cloudy")
+;;       ;;                .subtitle (m/Text "Today is Clear")
+;;       ;;                .leading (m/Icon
+;;       ;;                           m/Icons.wb_cloudy
+;;       ;;                           .color (m/Colors.blue.shade300))
+;;       ;;                .trailing (m/Icon
+;;       ;;                            m/Icons.keyboard_arrow_right))
+;;       ;;              (m/ListTile
+;;       ;;                .title (m/Text "Snow")
+;;       ;;                .subtitle (m/Text "Today is Clear")
+;;       ;;                .leading (m/Icon
+;;       ;;                           m/Icons.ac_unit
+;;       ;;                           .color (m/Colors.blue))
+;;       ;;                .trailing (m/Icon
+;;       ;;                            m/Icons.keyboard_arrow_right))
+;;       ;;              ])
+;;       )))
+
+;; (def MyWeatherApp
+;;   (f/widget
+;;     (m/Scaffold
+;;       .appBar (m/AppBar
+;;                 .title (m/Text "Weather App")
+;;                 .centerTitle true
+;;                 .backgroundColor (m/Colors.red))
+;;       .backgroundColor (m/Colors.red)
+;;       .body (m/SafeArea
+;;               .child
+;;                 (m/Column
+;;                   .children
+;;                   [(m/Container
+;;                      .padding (m/EdgeInsets.all 10)
+;;                      .child
+;;                      (m/TextField
+;;                        .decoration (m/InputDecoration
+;;                                      .prefixIcon (m/Icon
+;;                                                    (m/Icons.search)
+;;                                                    .color (m/Colors.white))
+;;                                      .hintText "Enter city name"
+;;                                      .hintStyle (m/TextStyle .color (m/Colors.white))
+;;                                      .border (m/OutlineInputBorder
+;;                                                .borderSide (m/BorderSide
+;;                                                              .width 2))
+;;                                      )))
+;;                    (m/Container
+;;                      .child CityDetail
+;;                      .padding (m/EdgeInsets.all 6))
+;;                     (m/Divider)
+;;                    (m/Divider)
+;;                    TemperatureDetail
+;;                    (m/Divider)
+;;                    (m/Divider)
+;;                    ExtraWeatherDetail
+;;                    (m/Divider)
+;;                    (m/Divider)
+;;                    (m/Text
+;;                      "7-DAY WEATHER FORECAST"
+;;                      .style (m/TextStyle
+;;                               .fontSize 22
+;;                               .color (m/Colors.white)))
+;;                    (m/Divider)
+;;                    BottomDetail]))
+;;               )
+;;       ))
 
 
-(defn main []
+;; (def CityDetail
+;;   (m/Column
+;;     .children
+;;     [(m/Text
+;;        "Chuvash Republic, RU"
+;;        .style (m/TextStyle
+;;                 .fontSize 35
+;;                 .color (m/Colors.white)
+;;                 .textBaseline m/TextBaseline.alphabetic))
+;;      (m/Divider)
+;;      (m/Text
+;;        "Tuesday, Mar 25, 2023"
+;;        .style (m/TextStyle
+;;                 .fontSize 20
+;;                 .color (m/Colors.white)))
+;;     ]))
+
+;; (def TemperatureDetail
+;;   (m/Row
+;;     .mainAxisAlignment (m/MainAxisAlignment.center)
+;;     .children
+;;     [(m/Icon
+;;        (m/Icons.wb_sunny)
+;;        .color (m/Colors.white)
+;;        .size 100)
+;;      (m/Padding
+;;        .padding (m/EdgeInsets.all 15))
+;;      (m/Column
+;;        .children
+;;        [(m/Text
+;;           "14 °C"
+;;           .style (m/TextStyle
+;;                    .color (m/Colors.white)
+;;                    .fontSize 60))
+;;         (m/Text
+;;           "LIGHT SNOW"
+;;           .style (m/TextStyle
+;;                    .color (m/Colors.white)
+;;                    .fontSize 23))])]))
+
+;; (def ExtraWeatherDetail
+;;   (m/Row
+;;     .mainAxisAlignment (m/MainAxisAlignment.spaceEvenly)
+;;     .children
+;;     [(WeatherDetailColumn 5 "km/hr")
+;;      (WeatherDetailColumn 3 "%")
+;;      (WeatherDetailColumn 20 "%")]))
+
+;; (defn WeatherDetailColumn
+;;   [num parameter]
+;;   (m/Column
+;;     .children
+;;     [(m/Icon
+;;        (m/Icons.ac_unit)
+;;        .color (m/Colors.white)
+;;        .size 36)
+;;      (m/Text
+;;        (str num)
+;;        .style (m/TextStyle
+;;                 .fontSize 23
+;;                 .color (m/Colors.white)))
+;;      (m/Text
+;;        (str parameter)
+;;        .style (m/TextStyle
+;;                 .fontSize 17
+;;                 .color (m/Colors.white)))]))
+
+;; (def data [{:dayOfWeek "Monday" :degree "5"}
+;;            {:dayOfWeek "Saturday" :degree "5"}
+;;            {:dayOfWeek "Friday" :degree "5"}])
+
+;; (def BottomDetail
+;;   ;; (m/Text "lol")
+;;   (m/SizedBox
+;;     .height 140
+;;     .child
+;;     (m/ListView
+;;       .scrollDirection (m/Axis.horizontal)
+;;       .padding (m/EdgeInsets.all 10)
+;;       .children
+;;       [(m/Container
+;;          .decoration (m/BoxDecoration
+;;                        .color (m/Colors.red.shade200))
+;;          .width 180
+;;          .padding (m/EdgeInsets.only .top 10)
+;;          .child
+;;          (m/Column
+
+;;            .children
+;;            [(m/Text
+;;               "Friday"
+;;               .style (m/TextStyle
+;;                        .fontSize 30
+;;                        .color (m/Colors.white)))
+;;             (m/Row
+;;               .children
+;;               [(m/Padding
+;;                  .padding (m/EdgeInsets.only .left 23))
+;;                (m/Text
+;;                  "6 °C"
+;;                  .style (m/TextStyle
+;;                           .fontSize 35
+;;                           .color (m/Colors.white)))
+;;                (m/Padding
+;;                  .padding (m/EdgeInsets.all 10))
+;;                (m/Icon
+;;                  (m/Icons.wb_sunny)
+;;                  .color (m/Colors.white)
+;;                  .size 50)])])
+;;          )
+;;        (m/Padding .padding (m/EdgeInsets.all 5))
+;;        (m/Container
+;;          .decoration (m/BoxDecoration
+;;                        .color (m/Colors.red.shade200))
+;;          .width 180
+;;          .padding (m/EdgeInsets.only .top 10)
+;;          .child
+;;          (m/Column
+
+;;            .children
+;;            [(m/Text
+;;               "Friday"
+;;               .style (m/TextStyle
+;;                        .fontSize 30
+;;                        .color (m/Colors.white)))
+;;             (m/Row
+;;               .children
+;;               [(m/Padding
+;;                  .padding (m/EdgeInsets.only .left 23))
+;;                (m/Text
+;;                  "6 °C"
+;;                  .style (m/TextStyle
+;;                           .fontSize 35
+;;                           .color (m/Colors.white)))
+;;                (m/Padding
+;;                  .padding (m/EdgeInsets.all 10))
+;;                (m/Icon
+;;                  (m/Icons.wb_sunny)
+;;                  .color (m/Colors.white)
+;;                  .size 50)])])
+;;          )
+;;        (m/Padding .padding (m/EdgeInsets.all 5))
+;;        (m/Container
+;;          .decoration (m/BoxDecoration
+;;                        .color (m/Colors.red.shade200))
+;;          .width 180
+;;          .padding (m/EdgeInsets.only .top 10)
+;;          .child
+;;          (m/Column
+
+;;            .children
+;;            [(m/Text
+;;               "Friday"
+;;               .style (m/TextStyle
+;;                        .fontSize 30
+;;                        .color (m/Colors.white)))
+;;             (m/Row
+;;               .children
+;;               [(m/Padding
+;;                  .padding (m/EdgeInsets.only .left 23))
+;;                (m/Text
+;;                  "6 °C"
+;;                  .style (m/TextStyle
+;;                           .fontSize 35
+;;                           .color (m/Colors.white)))
+;;                (m/Padding
+;;                  .padding (m/EdgeInsets.all 10))
+;;                (m/Icon
+;;                  (m/Icons.wb_sunny)
+;;                  .color (m/Colors.white)
+;;                  .size 50)])])
+;;          )
+
+;;        ])))
+
+
+
+
+;; ;; (map-indexed
+;; ;;       (fn [idx]
+;; ;;         (m/Chip
+;; ;;           .label (m/Text "1 градус")))
+;; ;;       [1 2 3 4 5 6 7 8])
+
+
+
+(defn main[]
   (f/run
     (m/MaterialApp
-      .title "Building Layouts"
-      .home MyWidget)))
+      .theme(m/ThemeData
+             ; .fontFamily "IndieFlower"
+              .visualDensity m/VisualDensity.adaptivePlatformDensity)
+      .title "Register Form Demo"
+      .home (RegisterFormPage)
+      ;; .routes {"/page2" (PageTwo)}
+      )))

@@ -1,0 +1,84 @@
+(ns acme.stepic.NamedRoutes
+  (:require ["package:flutter/material.dart" :as m]
+            [ cljd.flutter :as f]))
+
+
+
+
+
+
+(def NamedRoutes
+  (f/widget
+    :get [m/Navigator]
+    (m/Scaffold
+      .appBar
+      (m/AppBar .title (m/Text "Navigation")))
+    .body
+    m/Center
+    (m/ElevatedButton
+      .onPressed (fn []
+                   (do
+                     (.pushNamed navigator "/page2")
+                     nil)))
+    (m/Text
+      "Named Routes"
+      .style (m/TextStyle .fontSize 24))))
+
+
+
+;; (m/ElevatedButton
+;;         .onPressed
+;;         #(do
+;;          (.push navigator
+;;          (#/(m/MaterialPageRoute Object)
+;;          .builder
+;;          (f/build second-route)))
+;;                       nil))
+
+
+
+
+
+
+(defn PageTwo
+  []
+  (f/widget
+    :get [m/Navigator]
+    (m/Scaffold
+      .appBar (m/AppBar .title (m/Text "Second Route"))
+      .body
+      (m/Center
+        .child
+        (m/Column
+          .mainAxisAlignment (m/MainAxisAlignment.center)
+          .children
+          [(m/ElevatedButton
+             .child (m/Text
+                      "PageTwo!"
+                      .style (m/TextStyle .fontSize 24))
+             .onPressed #(.pop navigator)
+             )
+           ])))))
+
+
+
+
+(defn NamedRoutes
+  []
+  (f/widget
+    :get [m/Navigator]
+    (m/Scaffold
+      .appBar
+      (m/AppBar .title (m/Text "Navigation")))
+    .body
+    m/Center
+    (m/ElevatedButton
+      .child (m/Text
+               "Named Routes"
+               .style (m/TextStyle .fontSize 24))
+      .onPressed  (fn []
+                   (do
+                     (.pushNamed navigator "/page2")
+      nil))
+      )
+    ))

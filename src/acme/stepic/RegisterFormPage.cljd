@@ -1,0 +1,84 @@
+(ns acme.stepic.RegisterFormPage
+    (:require
+     ["package:flutter/material.dart" :as m]
+     [ cljd.flutter :as f]))
+
+
+
+
+
+(defn RegisterFormPage []
+  (m/Scaffold
+    .appBar
+    (m/AppBar
+      .title (m/Text "RegisterFormPage")
+      .centerTitle true)
+    .body
+  (m/Form
+    .child
+    (m/ListView
+      .padding (m/EdgeInsets.all 16)
+      .children
+      [
+       (m/TextField
+         .decoration
+         (m/InputDecoration
+           .labelText "Full Name *"))
+       (m/SizedBox .height 10)
+
+       (m/TextFormField
+         .decoration
+       (m/InputDecoration
+         .labelText "Phone Number *"))
+       (m/SizedBox .height 10)
+
+       (m/TextFormField
+         .decoration
+       (m/InputDecoration
+         .labelText "Email Addres *"))
+       (m/SizedBox .height 20)
+
+       (m/TextFormField
+         .decoration
+       (m/InputDecoration
+         .labelText "Life Story *"))
+       (m/SizedBox .height 10)
+
+       (m/TextFormField
+         .decoration
+       (m/InputDecoration
+         .labelText "Password *"))
+       (m/SizedBox .height 10)
+
+       (m/TextFormField
+         .decoration
+         (m/InputDecoration
+           .labelText "Confirm Password *"))
+       (m/SizedBox .height 10)
+
+       (m/ElevatedButton
+         .style (m/ElevatedButton.styleFrom
+                  .primary (m/Color 0xFF2AAE49))
+         .onPressed (fn [])
+         .child (m/Text "lol")
+         )
+       ;; (m/TextFormField
+       ;;   .decoration
+       ;;   (m/InputDecoration
+       ;;     .labelText "Email Addres *"))
+       ;; (m/SizedBox .height 10)
+
+       ;; (m/TextFormField
+       ;;   .decoration
+       ;;   (m/InputDecoration
+       ;;     .labelText "Email Addres *"))
+       ;; (m/SizedBox .height 10)
+
+
+       ;; (m/TextFormField
+       ;;   .decoration
+       ;;   (m/InputDecoration
+       ;;     .labelText "Email Addres *"))
+       ;; (m/SizedBox .height 10)
+       ]
+      ))))

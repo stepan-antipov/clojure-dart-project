@@ -1,0 +1,38 @@
+(ns acme.stepic.Navigation
+  (:require ["package:flutter/material.dart" :as m]
+            [ cljd.flutter :as f]))
+
+
+
+(def SecondRoute
+  (m/Scaffold
+    .appBar (m/AppBar .title (m/Text "Second Route"))
+    .body
+    (f/widget
+      :get [m/Navigator]
+      m/Center
+      (m/ElevatedButton .onPressed #(.pop navigator))
+      (m/Text
+        "Go back!"
+        .style (m/TextStyle .fontSize 24)))))
+
+
+(def Navigation
+  (f/widget
+    :get [m/Navigator]
+    (m/Scaffold
+      .appBar (m/AppBar .title (m/Text "Navigation"))
+      .body (m/Center
+              .child
+              (m/ElevatedButton
+                .onPressed
+                ;; wtf
+                #(do
+                   (.push navigator
+                     (#/
+                       (m/MaterialPageRoute Object)
+                       .builder (f/build SecondRoute)))
+                   nil)
+                .child (m/Text
+                         "Move to page"
+                         .style (m/TextStyle .fontSize 24)))))))

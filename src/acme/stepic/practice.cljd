@@ -1,3 +1,0 @@
-(ns stepic.practce
-  :require  ["package:flutter/material.dart" :as m]
-            [ cljd.flutter :as f])
