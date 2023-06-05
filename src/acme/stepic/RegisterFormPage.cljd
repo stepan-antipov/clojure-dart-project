@@ -1,18 +1,77 @@
 (ns acme.stepic.RegisterFormPage
   (:require
    ["package:flutter/material.dart" :as m]
-   [ cljd.flutter :as f]))
+   [ cljd.flutter :as f]
+   [cljd.string :as str]))
 
 
 (defonce *formState* (atom {:isPasswordObscure true
-                          :isConfirmPasswordObscure true}))
+                            :isConfirmPasswordObscure true
+                            :pass ""
+                            :conf ""}))
+
+(defonce *formData* (atom {:name ""
+                           :email ""
+                           :story ""
+                           :pass ""
+                           :phone ""
+                           }))
+
+(defn NameValidator
+  [value]
+  (cond
+    (> (count value) 10)
+    "Length of string must be less than 10 symbols"
+    (str/blank? value)
+    "String must not be empty"
+    (not (re-matches #"[A-z]+\s[A-z]+" value))
+    "Please enter alphabetical characters"
+    :else nil)
+  ;; (when (> (count value) 10)
+  ;;   "Length of string must be less than 10 symbols")
+  )
+
+
+(defn EmailValidator
+  [value]
+  (cond
+    (str/blank? value)
+    "Email must not be empty"
+    (not (str/includes? value "@"))
+    "Invalid email address"
+    :else nil))
+
+
+(defn NumberValidator
+  [value]
+  (when (not (re-matches #"^\+?\d{4}-\d{3}-\d{4}$" value))
+    "Phone number must be entered as +XXXX-XXX-XXXX"))
+
+
+(defn PasswordValidator
+  [value *fontState*]
+  (cond
+    (str/blank? value)
+    "Password must not be empty"
+    (< (count value) 8)
+    "Password must contain at least 8 symbols"
+    (not (= (:pass @*fontState*) (:conf @*fontState*)))
+    "Password is not match"
+    :else nil))
 
 
 
 (defn RegisterFormPage []
   (f/widget
-    :managed [textController (m/TextEditingController)]
-
+    :get [m/ScaffoldMessenger]
+    :let [form-key (#/(m/GlobalKey m/FormState))]
+    :managed [nameController (m/TextEditingController)]
+    :managed [emailController (m/TextEditingController)]
+    :managed [phoneController (m/TextEditingController)]
+    :managed [storyController (m/TextEditingController)]
+    :managed [passwordController (m/TextEditingController)]
+    :managed [passwordConfirmController (m/TextEditingController)]
+    :context ctx
     ;; :bg-watcher
     ;;     ([^m/TextEditingValue
     ;;       {second-input-text .-text} text-controller ]
@@ -27,15 +86,19 @@
         .centerTitle true)
       .body
       (m/Form
+        .key form-key
         .child
         (m/ListView
           .padding (m/EdgeInsets.all 16)
           .children
           [
-           (m/TextField
+           (m/TextFormField
                                         ;.inputFormatters
                                         ;[m/FilteringTextInputFormatter.digitsOnly]
-             .controller textController
+             .controller nameController
+             .validator
+             (fn [value]
+               (NameValidator value))
              .decoration
              (m/InputDecoration
                .hintText "What is your name?"
@@ -63,13 +126,18 @@
            (m/SizedBox .height 10)
 
            (m/TextFormField
+             ;; PHONE
+             .controller phoneController
+             .validator (fn [value] (NumberValidator value))
              .keyboardType (m/TextInputType.phone)
-             ;; не получилось запретить писать буквы
+             ;; .inputFormatters
+             ;; [FilteringTextInputFormatter (re-matches)]
+             ;; не получилось запретить писать буквы и фильтровать телефон
              .decoration
              (m/InputDecoration
                .labelText "Phone Number *"
                .hintText "Input your phone number"
-               .helperText "Phone format: +7(900)000-00-00"
+               .helperText "Phone format: +7900-000-0000"
                .prefixIcon (m/Icon (m/Icons.call))
                .suffixIcon (m/Icon m/Icons.delete_outline
                              .color (m/Colors.red))
@@ -93,6 +161,9 @@
            (m/SizedBox .height 10)
 
            (m/TextFormField
+             ;; EMAIL
+             .controller emailController
+             .validator (fn [value] (EmailValidator value))
              .keyboardType (m/TextInputType.emailAddress)
              .decoration
              (m/InputDecoration
@@ -103,6 +174,13 @@
            (m/SizedBox .height 20)
 
            (m/TextFormField
+             .controller storyController
+                                        ;.inputFormatters
+                                        ;[(m/LengthLimitingTextInputFormatter 10)]
+             .validator
+             (fn [value]
+               (when (str/blank? value)
+                 "Please enter some text"))
              .maxLines 3
              .decoration
              (m/InputDecoration
@@ -113,9 +191,16 @@
            (m/SizedBox .height 10)
 
            (m/TextFormField
-             .maxLength 8
+                                        ;.maxLength 8
              ;; ПАРОЛЬ
+             .controller passwordController
+             .onChanged(fn [text] (swap! *formState* assoc :pass text))
              .obscureText (:isPasswordObscure @*formState*)
+             .validator
+             (fn [value]
+               (PasswordValidator
+                 value
+                 *formState*))
              .decoration
              (m/InputDecoration
                .labelText "Password *"
@@ -131,9 +216,14 @@
            (m/SizedBox .height 10)
 
            (m/TextFormField
+             .controller passwordConfirmController
              ;; ПОДТВЕРДИТЬ ПАРОЛЬ
-             .maxLength 8
+             ;; .maxLength 8
+             .onChanged(fn [text] (swap! *formState* assoc :conf  text))
              .obscureText (:isConfirmPasswordObscure @*formState*)
+             .validator
+             (fn [value]
+               (PasswordValidator value *formState*))
              .decoration
              (m/InputDecoration
                .hintText "Confirm the password"
@@ -151,48 +241,36 @@
              .style (m/ElevatedButton.styleFrom
                       .primary (m/Color 0xFF2AAE49))
              .onPressed
-             (fn []
-                ;(dart:core/print (str "First text field: " text))
-               )
+             #(when (.validate (.-currentState form-key))
+
+                (swap! *formData* assoc :name (.text nameController))
+                (swap! *formData* assoc :email (.text emailController))
+                (swap! *formData* assoc :phone (.text phoneController))
+                (swap! *formData* assoc :story (.text storyController))
+
+                (m/showDialog
+                  .context ctx
+                  .builder
+                  (f/build
+                    :let [storyText (.text storyController)]
+                    ;; :let [nameText (.text nameController)]
+                    :let [phoneText (.text phoneController)]
+                    (m/AlertDialog
+                      .content
+                      (m/Text (str (:name @*formData*) " " storyText " " phoneText)))))
+                ;; (.showSnackBar scaffold-messenger
+                ;;   (m/SnackBar .content (m/Text "Form is valid")))
+                nil)
+             ;; (fn []
+             ;;   (m/showDialog
+             ;;     .context ctx
+             ;;     .builder
+             ;;     (f/build
+             ;;       :let [{:flds [text]} storyController]
+             ;;       (m/AlertDialog .content (m/Text text)))) nil)
 
              ;;(swap! counter-state update :count dec)
              .child (m/Text "Submit")
              )
-           ;; (m/TextFormField
-           ;;   .decoration
-           ;;   (m/InputDecoration
-           ;;     .labelText "Email Addres *"))
-           ;; (m/SizedBox .height 10)
-
-           ;; (m/TextFormField
-           ;;   .decoration
-           ;;   (m/InputDecoration
-           ;;     .labelText "Email Addres *"))
-           ;; (m/SizedBox .height 10)
-
-
-           ;; (m/TextFormField
-           ;;   .decoration
-           ;;   (m/InputDecoration
-           ;;     .labelText "Email Addres *"))
-           ;; (m/SizedBox .height 10)
            ]
           )))))
-
-
-
-
-
-        ;; :managed [text-controller (m/TextEditingController)]
-
-        ;; :bg-watcher
-        ;; ([^m/TextEditingValue
-        ;;   {second-input-text .-text} text-controller ]
-        ;;  (dart:core/print
-        ;;    (str "Second text field: " second-input-text)))
-
-        ;; m/Column
-        ;; .children
-        ;; [(m/TextField .onChanged
-        ;;    (fn [text] (dart:core/print (str "First text field: " text))))
-        ;;  (m/TextField .controller text-controller)]))))
