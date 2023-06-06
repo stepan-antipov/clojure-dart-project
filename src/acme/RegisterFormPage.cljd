@@ -5,17 +5,19 @@
    [cljd.string :as str]))
 
 
-(defonce *formState* (atom {:isPasswordObscure true
-                            :isConfirmPasswordObscure true
-                            :pass ""
-                            :conf ""}))
+(defonce *formState*
+  (atom {:isPasswordObscure true
+         :isConfirmPasswordObscure true
+         :pass ""
+         :conf ""
+         :name ""
+         :email ""
+         :story ""
+         :phone ""
+         :selectedValue ""}))
 
-(defonce *formData* (atom {:name ""
-                           :email ""
-                           :story ""
-                           :pass ""
-                           :phone ""
-                           }))
+
+
 
 (defn NameValidator
   [value]
@@ -44,27 +46,69 @@
 
 (defn NumberValidator
   [value]
-  (when (not (re-matches #"^\+?\d{4}-\d{3}-\d{4}$" value))
+  (when (not (re-matches
+               #"\d{3}"
+                                        ;#"^\+?\d{4}-\d{3}-\d{4}$"
+               value))
     "Phone number must be entered as +XXXX-XXX-XXXX"))
 
 
 (defn PasswordValidator
-  [value *fontState*]
+  [value *formState*]
   (cond
     (str/blank? value)
     "Password must not be empty"
-    (< (count value) 8)
+    (< (count value) 3)
     "Password must contain at least 8 symbols"
-    (not (= (:pass @*fontState*) (:conf @*fontState*)))
+    (not (= (:pass @*formState*) (:conf @*formState*)))
     "Password is not match"
     :else nil))
 
+
+
+(def countries ["Russia", "Ukraine", "Germany", "England"])
+
+
+(defn fieldFocusChange
+  "Смена фокуса элементов"
+  [{:keys [ctx currentFocus nextFocus]}]
+  (do
+    (.unfocus ^m/FocusNode currentFocus)
+    (-> m/FocusScope (.of ctx) (.requestFocus nextFocus))))
+
+
+
+(defn show-message
+  "показывает сообщение, если форма не валидна"
+  [{:keys [scaffold-messenger]}]
+  (.showSnackBar
+    scaffold-messenger
+    (m/SnackBar
+      .duration (Duration .seconds 5)
+      .backgroundColor m/Colors.red
+      .content (m/Text
+                 "Form is not valide! Please review and try again!"
+                 .style (m/TextStyle
+                          .color m/Colors.black
+                          .fontWeight m/FontWeight.w600
+                          .fontSize 18.0)))) nil)
+
+(defn clear-field
+  "Очистить инпут от данных"
+  [{:keys [controller state]}]
+  (do
+    (.clear controller)
+    (swap! state assoc :name "")))
 
 
 (defn RegisterFormPage []
   (f/widget
     :get [m/ScaffoldMessenger]
     :let [form-key (#/(m/GlobalKey m/FormState))]
+    :let [nameFocus (m/FocusNode)]
+    :let [phoneFocus (m/FocusNode)]
+    :let [passFocus (m/FocusNode)]
+    :let [confFocus (m/FocusNode)]
     :managed [nameController (m/TextEditingController)]
     :managed [emailController (m/TextEditingController)]
     :managed [phoneController (m/TextEditingController)]
@@ -72,12 +116,6 @@
     :managed [passwordController (m/TextEditingController)]
     :managed [passwordConfirmController (m/TextEditingController)]
     :context ctx
-    ;; :bg-watcher
-    ;;     ([^m/TextEditingValue
-    ;;       {second-input-text .-text} text-controller ]
-    ;;      (dart:core/print
-    ;;        (str "Second text field: " second-input-text)))
-
     :watch [state *formState*]
     (m/Scaffold
       .appBar
@@ -92,9 +130,15 @@
           .padding (m/EdgeInsets.all 16)
           .children
           [
+           ;; NAME
            (m/TextFormField
-                                        ;.inputFormatters
-                                        ;[m/FilteringTextInputFormatter.digitsOnly]
+             .focusNode nameFocus
+             .autofocus true
+             .onFieldSubmitted
+             (fn [_]
+               (fieldFocusChange {:ctx ctx
+                                  :currentFocus nameFocus
+                                  :nextFocus phoneFocus}))
              .controller nameController
              .validator
              (fn [value]
@@ -104,8 +148,14 @@
                .hintText "What is your name?"
                .labelText "Full Name *"
                .prefixIcon (m/Icon m/Icons.person)
-               .suffixIcon (m/Icon m/Icons.delete_outline
-                             .color (m/Colors.red))
+               .suffixIcon
+               (m/GestureDetector
+                 .child (m/Icon m/Icons.delete_outline
+                          .color (m/Colors.red))
+                 .onTap
+                 (fn []
+                   (clear-field {:controller nameController
+                                 :state *formState*})))
                .enabledBorder
                (m/OutlineInputBorder
                  .borderSide (m/BorderSide
@@ -127,6 +177,12 @@
 
            (m/TextFormField
              ;; PHONE
+             .focusNode phoneFocus
+             .onFieldSubmitted
+             (fn [_]
+               (fieldFocusChange {:ctx ctx
+                                  :currentFocus phoneFocus
+                                  :nextFocus passFocus}))
              .controller phoneController
              .validator (fn [value] (NumberValidator value))
              .keyboardType (m/TextInputType.phone)
@@ -139,8 +195,15 @@
                .hintText "Input your phone number"
                .helperText "Phone format: +7900-000-0000"
                .prefixIcon (m/Icon (m/Icons.call))
-               .suffixIcon (m/Icon m/Icons.delete_outline
-                             .color (m/Colors.red))
+               .suffixIcon (m/GestureDetector
+                             .onLongPress
+                             (fn []
+                               (clear-field
+                                 {:controller phoneController
+                                  :state *formState*}) )
+                             .child
+                             (m/Icon m/Icons.delete_outline
+                               .color (m/Colors.red)))
                .enabledBorder
                (m/OutlineInputBorder
                  .borderSide (m/BorderSide
@@ -173,6 +236,24 @@
                ))
            (m/SizedBox .height 20)
 
+           (m/DropdownButtonFormField
+             .decoration
+             (m/InputDecoration
+               .border (m/OutlineInputBorder)
+               .icon (m/Icon m/Icons.map)
+               .labelText "Country?")
+             .items (map
+                      (fn [elem]
+                        (m/DropdownMenuItem
+                          .value elem
+                          .child (m/Text (str elem))))
+                      countries)
+             .onChanged (fn [data]
+                          (swap! *formState* assoc :selectedValue data))
+             .validator (fn [value] (if (str/blank? value) "Select county" nil)))
+
+
+           (m/SizedBox .height 20)
            (m/TextFormField
              .controller storyController
                                         ;.inputFormatters
@@ -191,8 +272,13 @@
            (m/SizedBox .height 10)
 
            (m/TextFormField
-                                        ;.maxLength 8
              ;; ПАРОЛЬ
+             .focusNode passFocus
+             .onFieldSubmitted
+             (fn [_]
+               (fieldFocusChange {:ctx ctx
+                                  :currentFocus passFocus
+                                  :nextFocus confFocus}))
              .controller passwordController
              .onChanged(fn [text] (swap! *formState* assoc :pass text))
              .obscureText (:isPasswordObscure @*formState*)
@@ -216,9 +302,8 @@
            (m/SizedBox .height 10)
 
            (m/TextFormField
+             .focusNode confFocus
              .controller passwordConfirmController
-             ;; ПОДТВЕРДИТЬ ПАРОЛЬ
-             ;; .maxLength 8
              .onChanged(fn [text] (swap! *formState* assoc :conf  text))
              .obscureText (:isConfirmPasswordObscure @*formState*)
              .validator
@@ -241,26 +326,58 @@
              .style (m/ElevatedButton.styleFrom
                       .primary (m/Color 0xFF2AAE49))
              .onPressed
-             #(when (.validate (.-currentState form-key))
-
-                (swap! *formData* assoc :name (.text nameController))
-                (swap! *formData* assoc :email (.text emailController))
-                (swap! *formData* assoc :phone (.text phoneController))
-                (swap! *formData* assoc :story (.text storyController))
-
-                (m/showDialog
-                  .context ctx
-                  .builder
-                  (f/build
-                    :let [storyText (.text storyController)]
-                    ;; :let [nameText (.text nameController)]
-                    :let [phoneText (.text phoneController)]
-                    (m/AlertDialog
-                      .content
-                      (m/Text (str (:name @*formData*) " " storyText " " phoneText)))))
-                ;; (.showSnackBar scaffold-messenger
-                ;;   (m/SnackBar .content (m/Text "Form is valid")))
-                nil)
+             (fn []
+               (if (.validate (.-currentState form-key))
+                 ((swap! *formState* assoc :name
+                    (.-text nameController))
+                  (swap! *formState* assoc :email
+                    (.-text emailController))
+                  (swap! *formState* assoc :phone
+                    (.-text phoneController))
+                  (swap! *formState* assoc :story
+                    (.-text storyController))
+                  (m/showDialog
+                    .context ctx
+                    .builder
+                    (f/build
+                      :get [m/Navigator]
+                      :let [storyText (.text storyController)]
+                      ;; :let [nameText (.text nameController)]
+                      :let [phoneText (.text phoneController)]
+                      (m/AlertDialog
+                        .title
+                        (m/Text
+                          "Registration successful!"
+                          .style
+                          (m/TextStyle .color (m/Colors.green)))
+                        .actions [(m/TextButton
+                                    .child (m/Text
+                                             "Verified"
+                                             .style (m/TextStyle
+                                                      .color m/Colors.green
+                                                      .fontSize 18))
+                                    .onPressed
+                                    (fn []
+                                      (.pop navigator)))]
+                        .content
+                        (m/Text
+                          (str "Выши данные: "
+                            (:name @*formState*)
+                            " "
+                            storyText
+                            " "
+                            phoneText
+                            "\n"
+                            "Форма успешно прошла валидацию!")
+                          .style (m/TextStyle
+                                   .fontSize 18
+                                   .fontWeight
+                                   (m/FontWeight.w700))))))
+                  ;; (.showSnackBar scaffold-messenger
+                  ;;   (m/SnackBar .content (m/Text "Form is valid")))
+                  nil)
+                 (show-message {:scaffold-messenger scaffold-messenger})) ;; if
+               ) ;;fn []
              ;; (fn []
              ;;   (m/showDialog
              ;;     .context ctx

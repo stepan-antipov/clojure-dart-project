@@ -1,0 +1,33 @@
+(ns acme.stepic.UserInfoPage
+  (:require ["package:flutter/material.dart" :as m]
+            [ cljd.flutter :as f]))
+
+
+(defn UserInfoPage
+  "Виджет с информацией о пользователе"
+  []
+  (f/widget
+    :context ctx
+    (m/Scaffold
+      .appBar
+      (m/AppBar
+        .title (m/Text "User Info")
+        .centerTitle true)
+      .body
+      (m/Card
+        .child
+        (m/Column
+          .children
+          [(m/ListTile
+             .title
+             (m/Text
+               "name"
+               .style
+               (m/TextStyle
+                 .fontWeight
+                 m/FontWeight.w500))
+             .subtitle
+             (m/Text "Story")
+             .trailing (m/Text "Country")
+             .leading (m/Icon m/Icons.person
+                        .color m/Colors.black))])))))

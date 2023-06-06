@@ -1,8 +1,10 @@
 (ns acme.main
   (:require ["package:flutter/material.dart" :as m]
             [ cljd.flutter :as f]
-            [acme.stepic.RegisterFormPage :refer
-             [RegisterFormPage]]
+            ;; [acme.stepic.RegisterFormPage
+            ;;  :refer [RegisterFormPage]]
+            [acme.stepic.UserInfoPage
+             :refer [UserInfoPage]]
 
            ;; [acme.stepic.Navigation :refer [Navigation]]
             ;; [acme.stepic.NamedRoutes :as NamedRoutes]
@@ -197,6 +199,7 @@
 ;;     .children
 ;;     [(m/Column
 ;;        .children
+
 ;;        [(m/Icon (m.Icons/wb_sunny)
 ;;           .color m.Colors/yellow)])
 ;;      (m/SizedBox .width 16)
@@ -696,10 +699,10 @@
   (f/run
     (m/MaterialApp
       .theme(m/ThemeData
-             ; .fontFamily "IndieFlower"
+                                        ; .fontFamily "IndieFlower"
               .visualDensity
               m/VisualDensity.adaptivePlatformDensity)
       .title "Register Form Demo"
-      .home (RegisterFormPage)
+      .home (UserInfoPage)                         ;(RegisterFormPage)
       ;; .routes {"/page2" (PageTwo)}
       )))
