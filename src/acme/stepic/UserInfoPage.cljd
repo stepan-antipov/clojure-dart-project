@@ -1,33 +1,75 @@
 (ns acme.stepic.UserInfoPage
   (:require ["package:flutter/material.dart" :as m]
-            [ cljd.flutter :as f]))
+            [ cljd.flutter :as f]
+            [cljd.string :as str]))
+
+
+
+;; (defonce *formState*
+;;   (atom {:isPasswordObscure true
+;;          :isConfirmPasswordObscure true
+;;          :pass ""
+;;          :conf ""
+;;          :name ""
+;;          :email ""
+;;          :story ""
+;;          :phone ""
+;;          :country ""}))
 
 
 (defn UserInfoPage
   "Виджет с информацией о пользователе"
-  []
-  (f/widget
-    :context ctx
-    (m/Scaffold
-      .appBar
-      (m/AppBar
-        .title (m/Text "User Info")
-        .centerTitle true)
-      .body
-      (m/Card
-        .child
-        (m/Column
-          .children
-          [(m/ListTile
-             .title
-             (m/Text
-               "name"
-               .style
-               (m/TextStyle
-                 .fontWeight
-                 m/FontWeight.w500))
-             .subtitle
-             (m/Text "Story")
-             .trailing (m/Text "Country")
-             .leading (m/Icon m/Icons.person
-                        .color m/Colors.black))])))))
+  [{:keys [state]}]
+  (m/Scaffold
+    .appBar
+    (m/AppBar
+      .title (m/Text "User Info")
+      .centerTitle true)
+    .body
+    (m/Card
+      .margin (m/EdgeInsets.all 16)
+      .child
+      (m/Column
+        .children
+        [(m/ListTile
+           .title
+           (m/Text
+             (:name @state)
+             .style
+             (m/TextStyle
+               .fontWeight
+               m/FontWeight.w500))
+           .subtitle
+           (m/Text (:story @state))
+           .trailing (m/Text (:country @state))
+           .leading (m/Icon m/Icons.person
+                      .color m/Colors.black))
+         (m/ListTile
+           .title
+           (m/Text
+             (:phone @state)
+             .style
+             (m/TextStyle
+               .fontWeight
+               m/FontWeight.w500))
+           ;;.subtitle
+           ;; (m/Text "Story")
+           ;; .trailing (m/Text "Country")
+           .leading (m/Icon m/Icons.phone
+                      .color m/Colors.black))
+
+         (m/ListTile
+           .title
+           (m/Text
+             (if (str/blank? (:email @state))
+               "Not specified"
+               (:email @state))
+             .style
+             (m/TextStyle
+               .fontWeight
+               m/FontWeight.w500))
+           ;; .subtitle
+           ;; (m/Text "Story")
+           ;; .trailing (m/Text "Country")
+           .leading (m/Icon m/Icons.mail
+                      .color m/Colors.black))]))))

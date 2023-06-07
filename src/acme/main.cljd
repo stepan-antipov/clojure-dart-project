@@ -1,10 +1,10 @@
 (ns acme.main
   (:require ["package:flutter/material.dart" :as m]
             [ cljd.flutter :as f]
-            ;; [acme.stepic.RegisterFormPage
-            ;;  :refer [RegisterFormPage]]
-            [acme.stepic.UserInfoPage
-             :refer [UserInfoPage]]
+            [acme.stepic.RegisterFormPage
+             :refer [RegisterFormPage]]
+            ;; [acme.stepic.UserInfoPage
+            ;;  :refer [UserInfoPage]]
 
            ;; [acme.stepic.Navigation :refer [Navigation]]
             ;; [acme.stepic.NamedRoutes :as NamedRoutes]
@@ -703,6 +703,6 @@
               .visualDensity
               m/VisualDensity.adaptivePlatformDensity)
       .title "Register Form Demo"
-      .home (UserInfoPage)                         ;(RegisterFormPage)
+      .home (RegisterFormPage)                         ;(RegisterFormPage)
       ;; .routes {"/page2" (PageTwo)}
       )))

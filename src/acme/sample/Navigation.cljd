@@ -24,7 +24,9 @@
       (m/ElevatedButton
         .onPressed
         #(do
-           (.push navigator (#/(m/MaterialPageRoute Object) .builder (f/build second-route)))
+           (.push navigator
+             (#/(m/MaterialPageRoute Object)
+               .builder (f/build second-route)))
            nil))
       (m/Text "Open route"))))
 

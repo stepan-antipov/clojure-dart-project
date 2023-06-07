@@ -2,7 +2,8 @@
   (:require
    ["package:flutter/material.dart" :as m]
    [ cljd.flutter :as f]
-   [cljd.string :as str]))
+   [cljd.string :as str]
+   [acme.stepic.UserInfoPage :refer [UserInfoPage]]))
 
 
 (defonce *formState*
@@ -12,9 +13,9 @@
          :conf ""
          :name ""
          :email ""
+         :country ""
          :story ""
-         :phone ""
-         :selectedValue ""}))
+         :phone ""}))
 
 
 
@@ -99,6 +100,8 @@
   (do
     (.clear controller)
     (swap! state assoc :name "")))
+
+
 
 
 (defn RegisterFormPage []
@@ -226,7 +229,7 @@
            (m/TextFormField
              ;; EMAIL
              .controller emailController
-             .validator (fn [value] (EmailValidator value))
+             ;;.validator (fn [value] (EmailValidator value))
              .keyboardType (m/TextInputType.emailAddress)
              .decoration
              (m/InputDecoration
@@ -249,7 +252,7 @@
                           .child (m/Text (str elem))))
                       countries)
              .onChanged (fn [data]
-                          (swap! *formState* assoc :selectedValue data))
+                          (swap! *formState* assoc :country data))
              .validator (fn [value] (if (str/blank? value) "Select county" nil)))
 
 
@@ -262,7 +265,6 @@
              (fn [value]
                (when (str/blank? value)
                  "Please enter some text"))
-             .maxLines 3
              .decoration
              (m/InputDecoration
                .labelText "Life Story *"
@@ -341,24 +343,46 @@
                     .builder
                     (f/build
                       :get [m/Navigator]
-                      :let [storyText (.text storyController)]
+                      :let [storyText (.-text storyController)]
                       ;; :let [nameText (.text nameController)]
-                      :let [phoneText (.text phoneController)]
+                      :let [phoneText (.-text phoneController)]
                       (m/AlertDialog
                         .title
                         (m/Text
                           "Registration successful!"
                           .style
                           (m/TextStyle .color (m/Colors.green)))
-                        .actions [(m/TextButton
-                                    .child (m/Text
-                                             "Verified"
-                                             .style (m/TextStyle
-                                                      .color m/Colors.green
-                                                      .fontSize 18))
-                                    .onPressed
-                                    (fn []
-                                      (.pop navigator)))]
+                        .actions
+                        [(m/TextButton
+                           .child
+                           (m/Text
+                             "Verified"
+                             .style (m/TextStyle
+                                      .color m/Colors.green
+                                      .fontSize 18))
+                           .onPressed
+                           (fn []
+                             (do
+                               (.pop navigator)
+                               (.push navigator
+                                 (#/(m/MaterialPageRoute Object)
+                                   .builder
+                                 (f/build
+                                   (UserInfoPage
+                                     {:state *formState*})))
+                                 )
+                               nil)
+
+;; (m/ElevatedButton
+;;         .onPressed
+;;         #(do
+;;            (.push navigator
+;;              (#/(m/MaterialPageRoute Object)
+;;                .builder (f/build second-route)))
+;;            nil))
+
+
+                             ))]
                         .content
                         (m/Text
                           (str "Выши данные: "
